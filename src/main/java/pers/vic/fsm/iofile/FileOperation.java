@@ -82,23 +82,23 @@ public class FileOperation {
     public List<String> removeFiles(String path, String... r) {
         File file = new File(path);
         List<String> resultList = new ArrayList<>();
+        if(file.exists()) {
 //        delete folds
-        if (file.isDirectory() && r[0].equals("-r")) {
-            File[] itemFile = file.listFiles();
-            for (File p : Objects.requireNonNull(itemFile)) {
-                if (p.isDirectory())
-                    removeFiles(p.getAbsolutePath(), "-r"); //recursion
-                else
-                    p.delete();
-            }
-            file.delete();
-        } else
-            resultList.add("this is a folder");
-
+            if (file.isDirectory() && r[0].equals("-r")) {
+                File[] itemFile = file.listFiles();
+                for (File p : Objects.requireNonNull(itemFile)) {
+                    if (p.isDirectory())
+                        removeFiles(p.getAbsolutePath(), "-r"); //recursion
+                    else
+                        p.delete();
+                }
+                file.delete();
+            } else
+                resultList.add("this is a folder");
 //        delete file
-        if (file.exists() && r[0].equals(""))
-            file.delete();
-        else
+            if (file.exists() && r[0].equals(""))
+                file.delete();
+        } else
             resultList.add("cannot find the file");
         return resultList;
     }
