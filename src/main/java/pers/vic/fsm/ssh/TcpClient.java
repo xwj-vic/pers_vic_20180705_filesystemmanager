@@ -2,32 +2,38 @@ package pers.vic.fsm.ssh;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Scanner;
 
 /**
  * Create By Vic Xu on 7/5/2018
  */
 public class TcpClient {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         TcpClient client = new TcpClient();
-        client.client("127.0.0.1", 9008);
+        try {
+            client.client("127.0.0.1", 9008);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void client(String ip, int port) throws IOException {
         Socket socket = new Socket(ip, port);
         ConnectPipe pipe = new ConnectPipe();
-        BufferedReader reader = pipe.reader(socket); //接收服务端
-        BufferedWriter writer = pipe.writer(socket); //向服务端输出
+        BufferedReader reader = pipe.reader(socket);
+        BufferedWriter writer = pipe.writer(socket);
         BufferedReader inputOrder = new BufferedReader(new InputStreamReader(System.in));
         String line;
         while (!(line = inputOrder.readLine()).equals("bye")) {
-            writer.write(line+"\n");
+            writer.write(line + "\n");
             writer.flush();
-            //服务端返回
+            //Server response
             reader.lines().forEach(System.out::println);
         }
         writer.close();
         reader.close();
+        inputOrder.close();
         socket.close();
     }
 }

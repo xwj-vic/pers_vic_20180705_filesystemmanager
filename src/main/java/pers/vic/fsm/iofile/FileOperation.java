@@ -2,18 +2,25 @@ package pers.vic.fsm.iofile;
 
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * Create By Vic Xu on 7/5/2018
  */
-public class CopyFile {
+public class FileOperation {
 
-    public String[] getAndCopyFile(String source, String target) {
+    /**
+     * recursion
+     * @param source
+     * @param target
+     * @return
+     */
+    public List<String> getAndCopyFile(String source, String target) {
         BufferedInputStream inputStream = null;
         BufferedOutputStream outputStream = null;
-        String[] result = new String[1];
-        String notice = null;
+        List<String> resultList = new ArrayList<>();
         try {
 //            Iterate through the files in the folder
             File oldFile = new File(source);
@@ -25,7 +32,7 @@ public class CopyFile {
 //            Copy files
                 for (File f : Objects.requireNonNull(files)) {
                     if (f.isDirectory())
-                        getAndCopyFile(f.getAbsolutePath(), target + File.separator + f.getName());
+                        getAndCopyFile(f.getAbsolutePath(), target + File.separator + f.getName()); //recursion
                     else {
                         inputStream = new BufferedInputStream(new FileInputStream(f));
                         outputStream = new BufferedOutputStream(new FileOutputStream(target + File.separator + f.getName()));
@@ -36,11 +43,9 @@ public class CopyFile {
                         outputStream.flush();
                     }
                 }
-            } else {
-                notice = "The folder have not file!";
-                result[0] = notice;
-            }
-            return result;
+            } else
+                resultList.add("The folder have not file!");
+            return resultList;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -51,48 +56,50 @@ public class CopyFile {
                 e.printStackTrace();
             }
         }
-        return result;
+        return resultList;
     }
 
     //Ls
-    public void showFileList(String source) {
+    public List<String> showFileList(String source) {
         File file = new File(source);
+        List<String> resultList = new ArrayList<>();
         if (file.exists()) {
             File[] files = file.listFiles();
-            System.out.println("Files List:");
-            for (File f : files) {
-                System.out.println(f.getName() + "\\t" + f.getAbsolutePath());
-            }
-        } else {
-            System.out.println("Nothing");
-        }
+            for (File f : files)
+                resultList.add(f.getAbsolutePath());
+        } else
+            resultList.add("cannot find the file");
+        return resultList;
     }
 
     /**
      * remove file
      * rm+space+fileName
-     *
-     * @param source
-     * @param fileName
+     *recursion
+     * @param path
      */
-    public void removeFiles(String source, String fileName) {
-        File file = new File(source);
-        if (file.exists()) {
-            File[] files = file.listFiles();
-            boolean flag = false;
-            for (File f : Objects.requireNonNull(files)) {
-                if (f.getName().equals(fileName)) {
-                    f.delete();
-                    System.out.println("remove success");
-                    flag = true;
-                    break;
-                }
+    public List<String> removeFiles(String path, String... r) {
+        File file = new File(path);
+        List<String> resultList = new ArrayList<>();
+//        delete folds
+        if (file.isDirectory() && r[0].equals("-r")) {
+            File[] itemFile = file.listFiles();
+            for (File p : Objects.requireNonNull(itemFile)) {
+                if (p.isDirectory())
+                    removeFiles(p.getAbsolutePath(), "-r"); //recursion
+                else
+                    p.delete();
             }
-            if (!flag)
-                System.out.println("No such file");
-        } else {
-            System.out.println("Nothing");
-        }
+            file.delete();
+        } else
+            resultList.add("this is a folder");
+
+//        delete file
+        if (file.exists() && r[0].equals(""))
+            file.delete();
+        else
+            resultList.add("cannot find the file");
+        return resultList;
     }
 
 }
