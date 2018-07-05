@@ -36,7 +36,8 @@ public class TcpServer {
                 CharOrder charOrder = new CharOrder(line);
                 List<String> list = charOrder.handle();
                 for (String s : list) {
-                    writer.write(s + "\n");
+                    writer.write(s);
+                    writer.newLine();
                     writer.flush();
                 }
             }

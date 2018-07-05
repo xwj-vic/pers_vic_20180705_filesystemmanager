@@ -8,11 +8,12 @@ import java.util.Objects;
 
 /**
  * Create By Vic Xu on 7/5/2018
+ *
  */
 public class FileOperation {
 
     /**
-     * recursion
+     * recursion 递归
      * @param source
      * @param target
      * @return
@@ -75,7 +76,7 @@ public class FileOperation {
     /**
      * remove file
      * rm+space+fileName
-     *recursion
+     *recursion 递归
      * @param path
      */
     public List<String> removeFiles(String path, String... r) {

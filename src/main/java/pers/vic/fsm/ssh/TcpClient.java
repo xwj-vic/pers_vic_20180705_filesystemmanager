@@ -26,7 +26,8 @@ public class TcpClient {
         BufferedReader inputOrder = new BufferedReader(new InputStreamReader(System.in));
         String line;
         while (!(line = inputOrder.readLine()).equals("bye")) {
-            writer.write(line + "\n");
+            writer.write(line);
+            writer.newLine();
             writer.flush();
             //Server response
             reader.lines().forEach(System.out::println);
