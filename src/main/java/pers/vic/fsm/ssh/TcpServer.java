@@ -35,11 +35,9 @@ public class TcpServer {
             while (!(line = reader.readLine()).equals("bye")) {
                 CharOrder charOrder = new CharOrder(line);
                 List<String> list = charOrder.handle();
-                for (String s : list) {
-                    writer.write(s);
-                    writer.newLine();
-                    writer.flush();
-                }
+                writer.write(list.toString());
+                writer.newLine();
+                writer.flush();
             }
             writer.close();
             reader.close();

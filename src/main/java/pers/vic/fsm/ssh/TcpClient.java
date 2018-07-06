@@ -30,7 +30,7 @@ public class TcpClient {
             writer.newLine();
             writer.flush();
             //Server response
-            reader.lines().forEach(System.out::println);
+            System.out.println(reader.readLine());
         }
         writer.close();
         reader.close();
